@@ -6,7 +6,7 @@ from subprocess import run, PIPE
 APP_CONTAINER_PREFIX = "cc_"
 client = docker.from_env()
 
-def start_instance(request, instance_id, image, cpu, memory):
+def start_instance(request):
     """
     Creates a new instance in the client.
     :param request:
