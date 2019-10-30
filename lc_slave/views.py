@@ -13,7 +13,10 @@ def start_instance(request, instance_id, image, cpu, memory):
     :param instance_id:
     :return:
     """
-    memory = str(memory) + "m"
+    instance_id = request.POST['instance_id']
+    image = request.POST['image']
+    cpu = int(request.POST['cpu'])
+    memory = request.POST['memory'] + "m"
     container_name = APP_CONTAINER_PREFIX + instance_id
     try:
         container = client.containers.get(container_name)
@@ -36,13 +39,14 @@ def start_instance(request, instance_id, image, cpu, memory):
     return JsonResponse({"message": "Instance Created", "ssh_port": ssh_port})
 
 
-def stop_instance(request, instance_id):
+def stop_instance(request):
     """
     Stops the instance created
     :param request:
     :param instance_id:
     :return:
     """
+    instance_id = request.POST['instance_id']
     container_name = APP_CONTAINER_PREFIX + instance_id
     try:
         container = client.containers.get(container_name)
