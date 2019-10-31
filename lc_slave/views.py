@@ -24,7 +24,7 @@ def start_instance(request):
     instance_id = request['instance_id']
     image = request['image']
     cpu = int(request['cpu'])
-    memory = request['memory'] + "m"
+    memory = str(request['memory']) + "m"
     container_name = APP_CONTAINER_PREFIX + instance_id
     try:
         container = client.containers.get(container_name)
