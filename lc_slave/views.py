@@ -2,21 +2,29 @@ from django.shortcuts import render
 import docker
 from django.http import JsonResponse
 from subprocess import run, PIPE
+import json
 
 APP_CONTAINER_PREFIX = "cc_"
 client = docker.from_env()
 
+
 def start_instance(request, instance_id, image, cpu, memory):
     """
     Creates a new instance in the client.
+    :param memory:
+    :param cpu:
+    :param image:
     :param request:
     :param instance_id:
     :return:
     """
-    instance_id = request.POST['instance_id']
-    image = request.POST['image']
-    cpu = int(request.POST['cpu'])
-    memory = request.POST['memory'] + "m"
+
+    request = json.loads(request.body.decode('UTF-8'))
+
+    instance_id = request['instance_id']
+    image = request['image']
+    cpu = int(request['cpu'])
+    memory = request['memory'] + "m"
     container_name = APP_CONTAINER_PREFIX + instance_id
     try:
         container = client.containers.get(container_name)
@@ -24,7 +32,7 @@ def start_instance(request, instance_id, image, cpu, memory):
         pass
     else:
         return JsonResponse({"message": "Instance with the ID already running"}, status=400)
-    
+
     container = client.containers.run(
         image=image,
         name=container_name,
@@ -46,7 +54,11 @@ def stop_instance(request):
     :param instance_id:
     :return:
     """
-    instance_id = request.POST['instance_id']
+
+    request = json.loads(request.body.decode('UTF-8'))
+    print(request)
+
+    instance_id = request['instance_id']
     container_name = APP_CONTAINER_PREFIX + instance_id
     try:
         container = client.containers.get(container_name)
@@ -61,6 +73,7 @@ def get_system_resource(request):
     """
     :return: Current system resource of slave
     """
+
     process = run(["bash", "stats.sh"], stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
         return JsonResponse({"message": "Internal Server Error"}, status=500)
