@@ -73,8 +73,6 @@ def get_system_resource(request):
     """
     :return: Current system resource of slave
     """
-    process = run(["ls"], stdout=PIPE, stderr=PIPE)
-    print(process.stdout.decode("utf-8"))
     process = run(["bash", "lc_slave/stats.sh"], stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
         print(process.stderr.decode("utf-8"))
@@ -85,8 +83,8 @@ def get_system_resource(request):
         docker_ram = int(stats[0])
         host_ram = int(stats[1])
         total_ram = int(stats[2])
-    except ValueError:
-        return JsonResponse({"message": "RAM not numeric"}, status=500)
+    except ValueError as err:
+        return JsonResponse({"message": err}, status=500)
     return JsonResponse({"host_ram": host_ram, "docker_ram": docker_ram, "total_ram": total_ram})
 
 
@@ -97,7 +95,7 @@ def get_instance_resource(request, instance_id):
     :return: the resources within the instance
     """
     container_name = APP_CONTAINER_PREFIX + instance_id
-    process = run(["bash", "stats_instance.sh", container_name], stdout=PIPE, stderr=PIPE)
+    process = run(["bash", "lc_slave/stats_instance.sh", container_name], stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
         print(process.stderr.decode("utf-8"))
         return JsonResponse({"message": process.stderr.decode("utf-8")}, status=500)
