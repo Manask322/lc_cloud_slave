@@ -80,6 +80,7 @@ def get_system_resource(request):
         print(process.stderr.decode("utf-8"))
         return JsonResponse({"message": process.stderr.decode("utf-8")}, status=500)
     stats = process.stdout.decode("utf-8").split()
+    print(stats)
     try:
         docker_ram = int(stats[0])
         host_ram = int(stats[1])
