@@ -76,7 +76,7 @@ def get_system_resource(request):
 
     process = run(["bash", "stats.sh"], stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
-        return JsonResponse({"message": "Internal Server Error"}, status=500)
+        return JsonResponse({"message": process.stderr.decode("utf-8")}, status=500)
     stats = process.stdout.decode("utf-8").split()
     try:
         docker_ram = int(stats[0])
@@ -96,6 +96,6 @@ def get_instance_resource(request, instance_id):
     container_name = APP_CONTAINER_PREFIX + instance_id
     process = run(["bash", "stats_instance.sh", container_name], stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
-        return JsonResponse({"message": "Internal Server Error"}, status=500)
+        return JsonResponse({"message": process.stderr.decode("utf-8")}, status=500)
     stats = process.stdout.decode("utf-8").split()
     return JsonResponse({"memory": stats[0], "cpu": stats[1]})
