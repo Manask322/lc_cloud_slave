@@ -14,9 +14,10 @@ DOCKER_STATS_CMD=`docker stats --no-stream --format "table {{.MemPerc}}\t{{.CPUP
 
 SUM_RAM=`echo $DOCKER_STATS_CMD | tail -n +2 | sed "s/%//g" | awk '{s+=$1} END {print s}'`
 # SUM_CPU=`echo $DOCKER_STATS_CMD | tail -n +2 | sed "s/%//g" | awk '{s+=$2} END {print s}'`
-SUM_RAM_QUANTITY=`LC_NUMERIC=C printf %.2f $(echo "$SUM_RAM*$HOST_MEM_TOTAL*0.01" | bc)`
+SUM_RAM_QUANTITY=`LC_NUMERIC=C printf %.2f $(awk "BEGIN {print $SUM_RAM*$HOST_MEM_TOTAL*0.01}")`
 HOST_RAM_USAGE=`free -m | awk 'NR==2{printf "%s", $3 }'`
 
 # Output the result
 # echo $DOCKER_STATS_CMD
-echo "${SUM_RAM_QUANTITY} ${HOST_RAM_USAGE_MB} ${HOST_MEM_TOTAL}"
+echo "${SUM_RAM_QUANTITY} ${HOST_RAM_USAGE} ${HOST_MEM_TOTAL}"
+
