@@ -80,9 +80,9 @@ def get_system_resource(request):
     stats = process.stdout.decode("utf-8").split()
     print(stats)
     try:
-        docker_ram = int(stats[0])
-        host_ram = int(stats[1])
-        total_ram = int(stats[2])
+        docker_ram = int(float(stats[0]))
+        host_ram = int(float(stats[1]))
+        total_ram = int(float(stats[2]))
     except ValueError as err:
         print(err)
         return JsonResponse({"message": err}, status=500)
