@@ -37,7 +37,7 @@ def start_instance(request):
         image=image,
         name=container_name,
         cpu_count=cpu,
-        memory=memory,
+        mem_limit=memory,
         ports={
             22: None
         },
