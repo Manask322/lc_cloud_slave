@@ -60,7 +60,7 @@ def stop_instance(request):
     request = json.loads(request.body.decode('UTF-8'))
     print(request)
 
-    instance_id = request['instance_id']
+    instance_id = str(request['instance_id'])
     container_name = APP_CONTAINER_PREFIX + instance_id
     try:
         container = client.containers.get(container_name)
