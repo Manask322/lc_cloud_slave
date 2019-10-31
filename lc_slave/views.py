@@ -21,7 +21,7 @@ def start_instance(request):
 
     request = json.loads(request.body.decode('UTF-8'))
 
-    instance_id = request['instance_id']
+    instance_id = str(request['instance_id'])
     image = request['image']
     cpu = int(request['cpu'])
     memory = str(request['memory']) + "m"
