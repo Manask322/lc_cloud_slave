@@ -43,6 +43,7 @@ def start_instance(request):
         },
         detach=True
     )
+    container.reload()
     ssh_port = container.ports[0]
     return JsonResponse({"message": "Instance Created", "ssh_port": ssh_port})
 
