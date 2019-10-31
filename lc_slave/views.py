@@ -102,5 +102,6 @@ def get_instance_resource(request, instance_id):
     if process.returncode != 0:
         print(process.stderr.decode("utf-8"))
         return JsonResponse({"message": process.stderr.decode("utf-8")}, status=500)
-    stats = process.stdout.decode("utf-8").split()
+
+    stats = process.stdout.decode("utf-8").replace("%", "").split()
     return JsonResponse({"memory": stats[0], "cpu": stats[1]})
