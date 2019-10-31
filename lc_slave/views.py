@@ -73,8 +73,9 @@ def get_system_resource(request):
     """
     :return: Current system resource of slave
     """
-
-    process = run(["bash", "stats.sh"], stdout=PIPE, stderr=PIPE)
+    process = run(["ls"], stdout=PIPE, stderr=PIPE)
+    print(process.stdout.decode("utf-8"))
+    process = run(["bash", "lc_slave/stats.sh"], stdout=PIPE, stderr=PIPE)
     if process.returncode != 0:
         print(process.stderr.decode("utf-8"))
         return JsonResponse({"message": process.stderr.decode("utf-8")}, status=500)
