@@ -84,6 +84,7 @@ def get_system_resource(request):
         host_ram = int(stats[1])
         total_ram = int(stats[2])
     except ValueError as err:
+        print(err)
         return JsonResponse({"message": err}, status=500)
     return JsonResponse({"host_ram": host_ram, "docker_ram": docker_ram, "total_ram": total_ram})
 
