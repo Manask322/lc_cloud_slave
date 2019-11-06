@@ -3,6 +3,7 @@ import docker
 from django.http import JsonResponse
 from subprocess import run, PIPE
 import json
+from time import clock
 
 APP_CONTAINER_PREFIX = "cc_"
 client = docker.from_env()
@@ -33,6 +34,7 @@ def start_instance(request):
     else:
         return JsonResponse({"message": "Instance with the ID already running"}, status=400)
 
+    start_time = clock()
     container = client.containers.run(
         image=image,
         name=container_name,
@@ -44,6 +46,8 @@ def start_instance(request):
         detach=True
     )
     container.reload()
+    total_time = clock() - start_time
+    print("Start time: {}\nTotal time: {}\n".format(start_time, total_time))
     print(container.ports)
     ssh_port = container.ports['22/tcp'][0]['HostPort']
     return JsonResponse({"message": "Instance Created", "ssh_port": ssh_port})
